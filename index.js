@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
-const mongoConnect = require('./Config');
+const mongoConnect = require('./config');
 mongoConnect();
 const cors = require('cors');
 const api = require('./routes');
