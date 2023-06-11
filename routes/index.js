@@ -3,40 +3,42 @@ const express = require('express'); //import express
 
 const router = express.Router();
 
-const productController = require('../controllers/productController');
+const hotelController = require('../controllers/hotel.controller');
+const auditoriumController = require('../controllers/auditorium.controller');
+const bookingController = require('../controllers/booking.controller');
 const { upload } = require('../utils/fileUpload');
 
-// // Blog Routes
-// router.get('/getAllBlogs', blogController.getAllBlogs);
-// router.get('/getBlog', blogController.getBlog);
-// router.get('/deleteBlog', blogController.deleteBlog);
-// router.post('/createBlog', blogController.createBlog);
-// router.put('/updateBlog', blogController.updateBlog);
-// Category Routes
-router.get('/getAllProducts', productController.getAllProducts);
-router.get('/getProduct/:id', productController.getProduct);
+// Hotels Routes
+router.get('/getAllHotel', hotelController.getAllHotels);
+router.get('/getHotel/:id', hotelController.getHotel);
 router.post(
-	'/createProduct',
-	upload.single('image'),
-	productController.createProduct,
+	'/createHotel',
+	upload.fields([{ name: 'images' }, { name: 'headersImage' }]),
+	hotelController.createHotel,
 );
-router.delete('/deleteProduct/:id', productController.deleteProduct);
-// SubCategory Routes
+router.delete('/deleteHotel/:id', hotelController.deleteHotel);
+// Hotels Routes
+router.get('/getAllAuditorium', auditoriumController.getAllHotels);
+router.get('/getAuditorium/:id', auditoriumController.getHotel);
+router.post(
+	'/createAuditorium',
+	upload.fields([{ name: 'images' }, { name: 'headersImage' }]),
+	auditoriumController.createHotel,
+);
+router.delete('/deleteAuditorium/:id', auditoriumController.deleteHotel);
 
-// // Admin routes
-// router.post('/login', authController.authLogin);
-// router.post('/add_admin', authController.addAdmin);
+// Create Order
 
-// router.post(
-// 	'/CategoryDetailAdd',
-// 	upload.fields([
-// 		{ name: 'image', maxCount: 5 },
-// 		{ name: 'snapShots', maxCount: 5 },
-// 		{ name: 'featuredOneImage', maxCount: 1 },
-// 		{ name: 'featuredTwoImage', maxCount: 1 },
-// 		{ name: 'featuredThreeImage', maxCount: 1 },
-// 	]),
-// 	categoryDetailAdd.categoryDetail,
-// );
+router.post('/create-order');
+
+// Booking Routes
+router.get('/getAllBookingHotel', bookingController.getAllBookingHotels);
+// router.get('/getBookedHotel/:id', hotelController.getHotel);
+router.post(
+	'/createBookingHotel',
+
+	bookingController.createOrder,
+);
+router.delete('/deleteBookedHotel/:id', bookingController.deleteBookingHotel);
 
 module.exports = router;
