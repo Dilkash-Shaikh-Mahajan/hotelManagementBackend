@@ -9,7 +9,9 @@ const razorpay = new Razorpay({
 });
 // CREATE (POST) operation
 createOrder = async (req, res, next) => {
-	const amount = req.body.price; // Amount in paise
+	console.log(req.body);
+	// console.log(req.body.amount);
+	const amount = req.body.amount; // Amount in paise
 	const currency = req.body.currency; // Currency code (INR, USD, etc.)
 
 	const options = {
@@ -25,17 +27,9 @@ createOrder = async (req, res, next) => {
 	}
 };
 createBookingHotel = async (req, res, next) => {
-	const {
-		guestUserId,
-		checkInDate,
-		checkOutDate,
-		roomType,
-		numberOfGuests,
-		razorpay_order_id,
-		razorpay_payment_id,
-		razorpay_signature,
-		hotelId,
-	} = req.body;
+	console.log(req.body);
+	const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+		req.body;
 
 	const body = razorpay_order_id + '|' + razorpay_payment_id;
 
@@ -46,9 +40,18 @@ createBookingHotel = async (req, res, next) => {
 
 	const isAuthentic = expectedSignature === razorpay_signature;
 
+	console.log(req.body);
 	if (isAuthentic) {
 		// Database comes here
-		const {} = req.body;
+		console.log(isAuthentic);
+		const {
+			userName,
+			mobileNumber,
+			checkIn,
+			checkOut,
+			roomId,
+			razorpay_payment_id,
+		} = req.body;
 		let paymentDetails = await razorpay.payments.fetch(
 			razorpay_payment_id,
 		);
@@ -56,16 +59,15 @@ createBookingHotel = async (req, res, next) => {
 		// let order = await paymentSuccess.save();
 		// Create a new hotel booking object
 		const newBooking = new HotelBooking({
-			guestUserId,
-			checkInDate,
-			checkOutDate,
-			roomType,
-			numberOfGuests,
-			hotel: hotelId,
+			guestUserName: userName,
+			bookedUserMobileNumber: mobileNumber,
+			checkInDate: checkIn,
+			checkOutDate: checkOut,
+			roomId: roomId,
 			bookedUserEmail: paymentDetails.email,
-			amount: paymentDetails.amount,
+			price: paymentDetails.amount,
 			status: paymentDetails.status,
-			bookedUserMobile: paymentDetails.contact,
+			bookedUserMobileNumber: paymentDetails.contact,
 		});
 
 		// Save the booking to the database
@@ -80,12 +82,6 @@ createBookingHotel = async (req, res, next) => {
 					error: 'An error occurred while saving the booking.',
 				});
 			});
-
-		res.status(201).json({
-			success: true,
-			order,
-			paymentDetails,
-		});
 	} else {
 		res.status(400).json({
 			success: false,

@@ -6,7 +6,7 @@ getAllHotels = async (req, res, next) => {
 	try {
 		try {
 			const Hotels = await Hotel.find();
-			res.status(200).json({ status: true, data: Hotels });
+			res.status(200).json(Hotels);
 		} catch (err) {
 			res.status(500).send({ status: false, message: err.message });
 		}
@@ -160,24 +160,46 @@ deleteHotel = async (req, res, next) => {
 
 updateHotel = async (req, res, next) => {
 	console.log(req.body);
-	const hashedPassword = await bcrypt.hash(req.body.password, 12);
-
+	const { roomId } = req.params;
 	try {
-		try {
-			const user = await User.create({
-				email: req.body.email,
-				password: hashedPassword,
-				status: 1,
-			});
-
-			res.status(200).send({ message: 'Added' });
-		} catch (error) {
-			return res
-				.status(500)
-				.send({ status: 0, message: error.message });
+		const room = await Hotel.findById(roomId);
+		if (!room) {
+			return res.status(404).json({ error: 'Room not found' });
 		}
+		let fileImagesArray = [];
+		let fileHeaderImages = [];
+		// Find the room by ID
+		if (req.files && req.files.headersImage) {
+			req.files.headersImage.forEach((element) => {
+				fileHeaderImages.push(
+					`assets/Images/${element.filename}`,
+				);
+			});
+		}
+		if (req.files && req.files.images) {
+			req.files.images.forEach((element) => {
+				fileImagesArray.push(
+					`assets/Images/${element.filename}`,
+				);
+			});
+		}
+
+		// Update the room fields
+		room.headerImage = fileHeaderImages;
+		room.title = req.body.title;
+		room.description = req.body.description;
+		room.address = req.body.address;
+		room.city = req.body.city;
+		room.images = fileImagesArray;
+		room.price = req.body.price;
+		room.occupancy = req.body.occupancy;
+
+		// Save the updated room
+		const updatedRoom = await room.save();
+
+		res.json({ data: updatedRoom, status: true });
 	} catch (error) {
-		return res.status(500).send({ status: 0, message: error.message });
+		res.json({ error: error.message, status: true });
 	}
 };
 

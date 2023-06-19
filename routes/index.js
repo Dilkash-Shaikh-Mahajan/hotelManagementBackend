@@ -17,6 +17,11 @@ router.post(
 	hotelController.createHotel,
 );
 router.delete('/deleteHotel/:id', hotelController.deleteHotel);
+router.put(
+	'/updateHotel/:roomId',
+	upload.fields([{ name: 'images' }, { name: 'headersImage' }]),
+	hotelController.updateHotel,
+);
 // Hotels Routes
 router.get('/getAllAuditorium', auditoriumController.getAllHotels);
 router.get('/getAuditorium/:id', auditoriumController.getHotel);
@@ -29,15 +34,16 @@ router.delete('/deleteAuditorium/:id', auditoriumController.deleteHotel);
 
 // Create Order
 
-router.post('/create-order');
+// router.post('/create-order');
 
 // Booking Routes
 router.get('/getAllBookingHotel', bookingController.getAllBookingHotels);
 // router.get('/getBookedHotel/:id', hotelController.getHotel);
+router.put('/create-order', bookingController.createOrder);
 router.post(
 	'/createBookingHotel',
 
-	bookingController.createOrder,
+	bookingController.createBookingHotel,
 );
 router.delete('/deleteBookedHotel/:id', bookingController.deleteBookingHotel);
 

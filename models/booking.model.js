@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 // Define the hotel booking schema
 const hotelBookingSchema = new mongoose.Schema({
-	guestUserId: {
+	guestUserName: {
 		type: String,
 		required: true,
 	},
@@ -14,35 +14,24 @@ const hotelBookingSchema = new mongoose.Schema({
 		type: Date,
 		required: true,
 	},
-	roomType: {
-		type: String,
-		required: true,
+	roomId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'hotel',
 	},
-	numberOfGuests: {
-		type: Number,
-		required: true,
-	},
+
 	createdAt: {
 		type: Date,
 		default: Date.now,
+	},
+	price: {
+		type: Number,
+		required: true,
 	},
 	bookedUserEmail: {
 		type: String,
 		required: true,
 	},
-	amount: {
-		type: Number,
-		required: true,
-	},
-	hotel: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'hotel',
-	},
-	status: {
-		type: String,
-		required: true,
-	},
-	bookedUserMobile: {
+	bookedUserMobileNumber: {
 		type: String,
 		required: true,
 	},
