@@ -95,7 +95,7 @@ getAllBookingHotels = async (req, res, next) => {
 	// Retrieve all hotel bookings
 	try {
 		const allHotels = await HotelBooking.find();
-		res.status(200).json({ status: true, data: allHotels });
+		res.status(200).json(allHotels);
 	} catch (error) {
 		console.log(error.message);
 		res.status(500).json({ status: false, error: error.message });
